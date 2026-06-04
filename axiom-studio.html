@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AXIOM — Technology · Intelligence · Worlds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&family=Cinzel:wght@400;600;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#060608;--bg2:#09090e;--card:#0d0e16;--card2:#11121c;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.04);
+  --text:#c8c8d4;--text-dim:#5a5a70;--text-bright:#f0f0fa;--white:#ffffff;
+  --cyan:#00d4ff;--cyan-dim:rgba(0,212,255,0.08);--cyan-glow:rgba(0,212,255,0.25);
+  --violet:#a78bfa;--violet-dim:rgba(167,139,250,0.08);--violet-glow:rgba(167,139,250,0.25);
+  --gold:#c9a84c;--gold-dim:rgba(201,168,76,0.08);--gold-glow:rgba(201,168,76,0.25);
+  --emerald:#10d9a0;--emerald-dim:rgba(16,217,160,0.08);--emerald-glow:rgba(16,217,160,0.25);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ── CUSTOM CURSOR — desktop only ── */
+@media(hover:hover)and(pointer:fine){
+  body{cursor:none;}
+  a,button,.xf-feat,.ai-card,.wz-feat,.pill,.ov-card,.tilt-card,.join-proj-card,.branch-card{cursor:none;}
+}
+#cur,#cur-r{
+  position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  border-radius:50%;display:none;
+}
+@media(hover:hover)and(pointer:fine){
+  #cur{display:block;width:8px;height:8px;background:#fff;transition:width .15s,height .15s,background .2s;}
+  #cur-r{display:block;width:32px;height:32px;border:1px solid rgba(255,255,255,0.3);transition:width .25s,height .25s,border-color .3s;}
+}
+body.hc #cur{background:var(--cyan);} body.hc #cur-r{border-color:var(--cyan);width:42px;height:42px;}
+body.hv #cur{background:var(--violet);} body.hv #cur-r{border-color:var(--violet);width:42px;height:42px;}
+body.hg #cur{background:var(--gold);} body.hg #cur-r{border-color:var(--gold);width:42px;height:42px;}
+body.he #cur{background:var(--emerald);} body.he #cur-r{border-color:var(--emerald);width:42px;height:42px;}
+
+/* SCROLL PROGRESS */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--cyan),var(--violet));z-index:999;width:0%;transition:width .1s;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:#222230;border-radius:2px;}
+
+/* NOISE */
+body::after{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:1000;opacity:.4;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;width:100%;z-index:500;padding:0 5vw;height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,border-color .4s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(6,6,8,.96);border-bottom-color:var(--border);backdrop-filter:blur(16px);}
+.nav-brand{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:var(--white);
+  letter-spacing:.08em;text-decoration:none;display:flex;align-items:center;gap:10px;}
+.brand-mark{width:28px;height:28px;position:relative;display:flex;align-items:center;justify-content:center;}
+.brand-mark::before{content:'';position:absolute;inset:0;border:1.5px solid rgba(255,255,255,.3);
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);animation:markSpin 12s linear infinite;}
+.brand-mark::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 8px #fff;}
+@keyframes markSpin{to{transform:rotate(360deg);}}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{font-size:.72rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-dim);text-decoration:none;transition:color .3s;}
+.nav-links a:hover{color:var(--white);}
+.nav-btn{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  padding:8px 20px;background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--text);
+  transition:all .3s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.nav-btn:hover{background:#fff;color:var(--bg);border-color:#fff;}
+
+/* ── HERO ── */
+#hero{position:relative;width:100%;height:100vh;min-height:720px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;}
+#particle-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.hero-bg{position:absolute;inset:0;}
+.mesh{position:absolute;inset:0;
+  background:radial-gradient(ellipse 55% 50% at 20% 50%,rgba(0,212,255,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 45% 60% at 80% 30%,rgba(167,139,250,.07) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 40% at 60% 80%,rgba(201,168,76,.06) 0%,transparent 60%);
+  animation:meshMove 12s ease-in-out infinite alternate;}
+@keyframes meshMove{0%{filter:blur(40px);}50%{filter:blur(60px);}100%{filter:blur(40px);}}
+.hero-grid{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:80px 80px;}
+.hero-diagonal{position:absolute;top:0;right:18%;width:1px;height:100%;
+  background:linear-gradient(to bottom,transparent,rgba(255,255,255,.06),transparent);}
+.hero-content{position:relative;z-index:10;max-width:920px;padding:0 5vw;text-align:center;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:.7rem;font-weight:600;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);border:1px solid var(--border);
+  padding:6px 16px;margin-bottom:2rem;opacity:0;animation:fadeUp .8s .1s ease forwards;}
+.tag-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);
+  animation:tagPulse 2s ease-in-out infinite;}
+@keyframes tagPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(3rem,9vw,7rem);font-weight:800;
+  line-height:.95;letter-spacing:-.02em;color:var(--white);opacity:0;animation:fadeUp .9s .25s ease forwards;}
+.t-dim{color:rgba(255,255,255,.2);}.t-cyan{color:var(--cyan);}.t-violet{color:var(--violet);}
+.t-gold{color:var(--gold);}.t-emerald{color:var(--emerald);}
+.hero-sub{font-size:clamp(.95rem,1.8vw,1.15rem);font-weight:300;color:var(--text-dim);line-height:1.8;
+  max-width:560px;margin:1.6rem auto 2.6rem;opacity:0;animation:fadeUp .9s .4s ease forwards;}
+.hero-pills{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;
+  opacity:0;animation:fadeUp .9s .55s ease forwards;}
+.pill{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 18px;border:1px solid;cursor:pointer;
+  transition:background .3s,box-shadow .3s,transform .2s;
+  clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);}
+.pill:hover{transform:translateY(-3px);}
+.pill-cyan{color:var(--cyan);border-color:rgba(0,212,255,.3);}
+.pill-cyan:hover{background:var(--cyan-dim);box-shadow:0 0 24px var(--cyan-glow);}
+.pill-violet{color:var(--violet);border-color:rgba(167,139,250,.3);}
+.pill-violet:hover{background:var(--violet-dim);box-shadow:0 0 24px var(--violet-glow);}
+.pill-gold{color:var(--gold);border-color:rgba(201,168,76,.3);}
+.pill-gold:hover{background:var(--gold-dim);box-shadow:0 0 24px var(--gold-glow);}
+.pill-emerald{color:var(--emerald);border-color:rgba(16,217,160,.3);}
+.pill-emerald:hover{background:var(--emerald-dim);box-shadow:0 0 24px var(--emerald-glow);}
+.hero-scroll{position:absolute;bottom:6vh;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--text-dim);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;
+  opacity:0;animation:fadeIn 1s 1.2s ease forwards;}
+.scroll-bar{width:1px;height:44px;background:linear-gradient(to bottom,var(--text-dim),transparent);
+  animation:scrollAnim 2s ease-in-out infinite;}
+@keyframes scrollAnim{0%,100%{opacity:.4;}50%{opacity:1;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ── OVERVIEW GRID ── */
+#overview{padding:0 5vw;margin-top:100px;}
+.overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;
+  background:var(--border);border:1px solid var(--border);}
+.ov-card{background:var(--card);padding:36px 28px;position:relative;overflow:hidden;
+  transition:background .4s,transform .4s;transform-style:preserve-3d;}
+.ov-card:hover{background:var(--card2);}
+.ov-accent{position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);
+  transform-origin:left;transition:transform .5s ease;}
+.ov-card:hover .ov-accent{transform:scaleX(1);}
+.ov-accent-cyan{background:linear-gradient(to right,var(--cyan),transparent);}
+.ov-accent-violet{background:linear-gradient(to right,var(--violet),transparent);}
+.ov-accent-gold{background:linear-gradient(to right,var(--gold),transparent);}
+.ov-accent-emerald{background:linear-gradient(to right,var(--emerald),transparent);}
+.ov-num{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:1rem;}
+.ov-name{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);margin-bottom:.6rem;}
+.ov-desc{font-size:.88rem;font-weight:400;color:var(--text-dim);line-height:1.7;}
+.ov-tag{display:inline-block;margin-top:1.2rem;font-size:.62rem;font-weight:600;
+  letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border:1px solid;}
+.ov-tag-cyan{color:var(--cyan);border-color:rgba(0,212,255,.25);}
+.ov-tag-violet{color:var(--violet);border-color:rgba(167,139,250,.25);}
+.ov-tag-gold{color:var(--gold);border-color:rgba(201,168,76,.25);}
+.ov-tag-emerald{color:var(--emerald);border-color:rgba(16,217,160,.25);}
+.ov-arrow{position:absolute;bottom:24px;right:24px;font-size:1.2rem;color:var(--text-dim);
+  transition:transform .3s,color .3s;}
+.ov-card:hover .ov-arrow{transform:translate(3px,-3px);}
+.ov-card:hover.cyan-card .ov-arrow{color:var(--cyan);}
+.ov-card:hover.violet-card .ov-arrow{color:var(--violet);}
+.ov-card:hover.gold-card .ov-arrow{color:var(--gold);}
+.ov-card:hover.emerald-card .ov-arrow{color:var(--emerald);}
+
+/* ── SHARED ── */
+.sec-label{font-size:.65rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;margin-bottom:.8rem;}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.4rem);
+  font-weight:800;line-height:1.05;color:var(--white);margin-bottom:1rem;}
+.sec-body{font-size:1rem;font-weight:400;color:var(--text-dim);line-height:1.85;max-width:480px;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+.reveal.on{opacity:1;transform:translateY(0);}
+.reveal-l{opacity:0;transform:translateX(-32px);transition:opacity .9s ease,transform .9s ease;}
+.reveal-l.on{opacity:1;transform:translateX(0);}
+.reveal-r{opacity:0;transform:translateX(32px);transition:opacity .9s ease,transform .9s ease;}
+.reveal-r.on{opacity:1;transform:translateX(0);}
+.divider{width:calc(100% - 10vw);margin:0 5vw;height:1px;
+  background:linear-gradient(to right,transparent,var(--border),transparent);}
+
+/* ── XFRAME ── */
+#xframe{padding:140px 5vw;}
+.xf-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.xf-label{color:var(--cyan);}
+.xf-features{display:flex;flex-direction:column;gap:1.5px;margin-top:2.5rem;background:var(--border);}
+.xf-feat{background:var(--card);padding:20px 24px;display:flex;align-items:flex-start;gap:16px;
+  border-left:2px solid transparent;transition:border-color .3s,background .3s;}
+.xf-feat:hover{border-left-color:var(--cyan);background:var(--card2);}
+.xf-feat-icon{width:36px;height:36px;border-radius:50%;background:rgba(0,212,255,.08);
+  border:1px solid rgba(0,212,255,.2);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.9rem;}
+.xf-feat-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:.25rem;}
+.xf-feat-desc{font-size:.85rem;color:var(--text-dim);line-height:1.6;}
+
+/* 3D Phone */
+.xf-visual{position:relative;display:flex;justify-content:center;align-items:center;perspective:1200px;}
+.phone-wrap{position:relative;width:240px;transform:rotateY(-15deg) rotateX(5deg);
+  transform-style:preserve-3d;transition:transform .8s cubic-bezier(.16,1,.3,1);}
+.xf-visual:hover .phone-wrap{transform:rotateY(-4deg) rotateX(2deg);}
+.phone{width:240px;height:488px;border-radius:36px;background:var(--card);
+  border:1.5px solid rgba(0,212,255,.25);position:relative;overflow:hidden;
+  box-shadow:0 0 60px rgba(0,212,255,.15),0 40px 80px rgba(0,0,0,.7),
+  inset 0 1px 0 rgba(255,255,255,.05);}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:80px;height:22px;background:var(--bg);border-radius:0 0 14px 14px;z-index:5;}
+/* Side buttons */
+.phone::after{content:'';position:absolute;right:-3px;top:100px;
+  width:3px;height:60px;background:rgba(0,212,255,.15);border-radius:0 2px 2px 0;}
+.phone-screen{position:absolute;inset:0;background:linear-gradient(135deg,#050810 0%,#0a1020 40%,#061018 100%);overflow:hidden;}
+.phone-game-ui{padding:36px 16px 16px;height:100%;position:relative;}
+.fps-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.fps-counter{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--cyan);
+  text-shadow:0 0 24px var(--cyan),0 0 48px rgba(0,212,255,.3);}
+.fps-badge{background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);padding:2px 8px;
+  font-size:.48rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);
+  align-self:flex-start;margin-top:4px;}
+.fps-label{font-size:.5rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(0,212,255,.4);margin-bottom:12px;}
+.game-scene{width:100%;height:155px;margin-bottom:10px;
+  background:linear-gradient(180deg,#0a1830 0%,#0d2040 50%,#162840 100%);
+  border-radius:8px;position:relative;overflow:hidden;border:1px solid rgba(0,212,255,.1);}
+.scene-stars{position:absolute;inset:0;}
+.scene-horizon{position:absolute;bottom:30%;width:100%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(0,212,255,.5),transparent);}
+.scene-ground{position:absolute;bottom:0;left:0;right:0;height:30%;
+  background:linear-gradient(to top,rgba(0,40,60,.8),transparent);}
+.scene-char{position:absolute;bottom:28%;left:50%;transform:translateX(-50%);
+  width:10px;height:22px;background:var(--cyan);border-radius:3px;
+  box-shadow:0 0 12px var(--cyan),0 0 28px rgba(0,212,255,.5);
+  animation:charFloat 3s ease-in-out infinite;}
+@keyframes charFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-5px);}}
+.scene-effect{position:absolute;bottom:28%;left:50%;width:40px;height:40px;
+  transform:translate(-50%,0);border-radius:50%;
+  background:radial-gradient(ellipse,rgba(0,212,255,.25),transparent);
+  animation:effectPulse 1.5s ease-in-out infinite;}
+@keyframes effectPulse{0%,100%{transform:translate(-50%,0) scale(.8);opacity:.4;}50%{transform:translate(-50%,0) scale(1.4);opacity:.8;}}
+.perf-bars{display:flex;flex-direction:column;gap:6px;margin-top:6px;}
+.perf-row{display:flex;align-items:center;gap:8px;}
+.perf-name{font-size:.48rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(0,212,255,.45);min-width:52px;}
+.perf-bar-bg{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;}
+.perf-bar-fill{height:100%;background:linear-gradient(to right,var(--cyan),rgba(0,212,255,.3));
+  border-radius:2px;animation:barFill 2s ease forwards;}
+@keyframes barFill{from{width:0%;}to{width:var(--w);}}
+.perf-val{font-size:.48rem;font-weight:700;color:var(--cyan);min-width:28px;text-align:right;}
+.phone-glow{position:absolute;inset:-30px;
+  background:radial-gradient(ellipse at 50% 60%,rgba(0,212,255,.08),transparent 70%);
+  pointer-events:none;z-index:-1;}
+.stat-float{position:absolute;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);
+  padding:10px 14px;backdrop-filter:blur(12px);}
+.stat-float.left{left:-90px;top:30%;}
+.stat-float.right{right:-90px;top:55%;}
+.stat-float-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--cyan);}
+.stat-float-lbl{font-size:.5rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(0,212,255,.45);}
+
+/* ── NEURA AI ── */
+#airobots{padding:140px 5vw;background:linear-gradient(to bottom,var(--bg),#09090f,var(--bg));}
+.ai-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.ai-label{color:var(--violet);}
+.ai-visual{position:relative;}
+.neural-svg{width:100%;height:100%;max-width:420px;}
+.ai-badge{display:inline-flex;align-items:center;gap:8px;margin-bottom:1.5rem;
+  background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.25);
+  padding:6px 14px;font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;}
+.ai-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--violet);
+  box-shadow:0 0 8px var(--violet);animation:tagPulse 2s ease-in-out infinite;}
+.ai-cards{margin-top:2.5rem;display:flex;flex-direction:column;gap:1.5px;background:var(--border);}
+.ai-card{background:var(--card);padding:22px 24px;border-left:2px solid transparent;
+  transition:border-color .3s,background .3s;}
+.ai-card:hover{border-left-color:var(--violet);background:var(--card2);}
+.ai-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;}
+.ai-card-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--white);}
+.ai-card-status{font-size:.58rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;padding:3px 8px;border:1px solid;}
+.status-dev{color:var(--violet);border-color:rgba(167,139,250,.3);}
+.status-build{color:var(--emerald);border-color:rgba(16,217,160,.3);}
+.status-research{color:rgba(167,139,250,.5);border-color:rgba(167,139,250,.15);}
+.ai-card-desc{font-size:.87rem;color:var(--text-dim);line-height:1.65;}
+
+/* ── ECLIPSE BROWSER ── */
+#eclipse{padding:140px 5vw;}
+.ec-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.ec-label{color:var(--emerald);}
+.ec-visual{position:relative;display:flex;justify-content:center;}
+.browser-wrap{width:100%;max-width:460px;position:relative;}
+.browser-frame{background:var(--card);border:1px solid rgba(16,217,160,.2);border-radius:12px;
+  overflow:hidden;box-shadow:0 0 50px rgba(16,217,160,.1),0 30px 60px rgba(0,0,0,.6);}
+.browser-bar{background:#0a0b14;padding:10px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(16,217,160,.1);}
+.browser-dots{display:flex;gap:6px;}
+.b-dot{width:10px;height:10px;border-radius:50%;}
+.b-dot-r{background:#ff5f57;}.b-dot-y{background:#febc2e;}.b-dot-g{background:#28c840;}
+.browser-url{flex:1;background:rgba(16,217,160,.06);border:1px solid rgba(16,217,160,.12);
+  border-radius:6px;padding:5px 12px;font-size:.72rem;color:var(--emerald);
+  font-family:'Outfit',monospace;letter-spacing:.02em;}
+.browser-body{padding:0;background:#050608;min-height:240px;position:relative;overflow:hidden;}
+.browser-content{padding:24px;position:relative;z-index:2;}
+.bc-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);margin-bottom:.5rem;}
+.bc-sub{font-size:.8rem;color:rgba(16,217,160,.7);font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
+.bc-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.bc-tag{font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  padding:3px 10px;border:1px solid rgba(16,217,160,.25);color:var(--emerald);}
+.bc-bar{height:3px;background:rgba(255,255,255,.04);border-radius:2px;margin-bottom:8px;overflow:hidden;}
+.bc-bar-fill{height:100%;border-radius:2px;background:linear-gradient(to right,var(--emerald),rgba(16,217,160,.3));}
+.bc-bar-lbl{display:flex;justify-content:space-between;font-size:.5rem;
+  font-weight:600;letter-spacing:.15em;color:rgba(16,217,160,.45);text-transform:uppercase;margin-bottom:4px;}
+.browser-glow{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  width:200px;height:80px;background:radial-gradient(ellipse,rgba(16,217,160,.12),transparent);
+  pointer-events:none;}
+.ec-feats{display:flex;flex-direction:column;gap:1.5px;margin-top:2.5rem;background:var(--border);}
+.ec-feat{background:var(--card);padding:20px 24px;display:flex;align-items:flex-start;gap:16px;
+  border-left:2px solid transparent;transition:border-color .3s,background .3s;}
+.ec-feat:hover{border-left-color:var(--emerald);background:var(--card2);}
+.ec-feat-icon{width:36px;height:36px;border-radius:50%;background:rgba(16,217,160,.08);
+  border:1px solid rgba(16,217,160,.2);display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.9rem;}
+.ec-feat-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--white);margin-bottom:.25rem;}
+.ec-feat-desc{font-size:.85rem;color:var(--text-dim);line-height:1.6;}
+.ec-cta-row{margin-top:2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.ec-btn{font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  padding:12px 28px;background:transparent;border:1px solid rgba(16,217,160,.4);
+  color:var(--emerald);text-decoration:none;transition:all .3s;
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.ec-btn:hover{background:rgba(16,217,160,.1);box-shadow:0 0 24px rgba(16,217,160,.2);}
+.ec-note{font-size:.72rem;color:var(--text-dim);}
+
+/* ── WORLD ZERO ── */
+#worldzero{padding:140px 5vw;}
+.wz-label{color:var(--gold);}
+.wz-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.wz-map{position:relative;width:100%;aspect-ratio:1.3;background:var(--card);
+  border:1px solid rgba(201,168,76,.15);overflow:hidden;}
+.wz-map::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(201,168,76,.04),transparent);}
+#india-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.map-label{position:absolute;top:12px;left:12px;font-size:.55rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--gold);background:rgba(6,6,8,.9);
+  padding:3px 8px;border:1px solid rgba(201,168,76,.3);white-space:nowrap;}
+.map-locked{position:absolute;font-size:.42rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.18);background:rgba(6,6,8,.85);padding:2px 6px;border:1px solid rgba(255,255,255,.07);}
+.wz-corner{position:absolute;width:14px;height:14px;border-color:rgba(201,168,76,.3);border-style:solid;}
+.wz-corner.tl{top:6px;left:6px;border-width:1px 0 0 1px;}
+.wz-corner.tr{top:6px;right:6px;border-width:1px 1px 0 0;}
+.wz-corner.bl{bottom:6px;left:6px;border-width:0 0 1px 1px;}
+.wz-corner.br{bottom:6px;right:6px;border-width:0 1px 1px 0;}
+.wz-features{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--border);margin-top:2rem;}
+.wz-feat{background:var(--card);padding:20px;transition:background .3s;}
+.wz-feat:hover{background:var(--card2);}
+.wz-feat-icon{font-size:1.2rem;margin-bottom:.6rem;}
+.wz-feat-name{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:.3rem;}
+.wz-feat-desc{font-size:.8rem;color:var(--text-dim);line-height:1.6;}
+
+/* ── RECRUITMENT ── */
+#join{padding:140px 5vw;background:linear-gradient(to bottom,var(--bg),#07070d,var(--bg));}
+.join-header{text-align:center;margin-bottom:4rem;}
+.join-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:800;
+  color:var(--white);margin-bottom:.8rem;}
+.join-sub{font-size:1rem;color:var(--text-dim);line-height:1.8;max-width:500px;margin:0 auto;}
+.join-step-label{font-size:.65rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--text-dim);text-align:center;margin-bottom:2rem;}
+.join-proj-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;
+  background:var(--border);border:1px solid var(--border);margin-bottom:3rem;}
+.join-proj-card{background:var(--card);padding:32px 24px;position:relative;
+  border-bottom:2px solid transparent;transition:all .4s;cursor:pointer;text-align:center;}
+.join-proj-card:hover{background:var(--card2);}
+.join-proj-card.selected{border-bottom-color:currentColor;}
+.join-proj-card.selected.c-cyan{border-bottom-color:var(--cyan);background:rgba(0,212,255,.04);}
+.join-proj-card.selected.c-violet{border-bottom-color:var(--violet);background:rgba(167,139,250,.04);}
+.join-proj-card.selected.c-emerald{border-bottom-color:var(--emerald);background:rgba(16,217,160,.04);}
+.join-proj-card.selected.c-gold{border-bottom-color:var(--gold);background:rgba(201,168,76,.04);}
+.join-proj-icon{font-size:2rem;margin-bottom:.8rem;}
+.join-proj-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--white);margin-bottom:.4rem;}
+.join-proj-desc{font-size:.82rem;color:var(--text-dim);line-height:1.5;}
+.join-proj-check{position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:50%;
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;transition:all .3s;opacity:0;}
+.join-proj-card.selected .join-proj-check{opacity:1;background:currentColor;}
+.join-proj-card.selected.c-cyan .join-proj-check{background:var(--cyan);}
+.join-proj-card.selected.c-violet .join-proj-check{background:var(--violet);}
+.join-proj-card.selected.c-emerald .join-proj-check{background:var(--emerald);}
+.join-proj-card.selected.c-gold .join-proj-check{background:var(--gold);}
+
+/* Branch section */
+#join-branches{display:none;margin-bottom:3rem;}
+.branch-header{text-align:center;margin-bottom:2rem;}
+.branch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:var(--border);border:1px solid var(--border);}
+.branch-card{background:var(--card);padding:24px 20px;border-top:2px solid transparent;
+  transition:all .35s;cursor:pointer;position:relative;}
+.branch-card:hover{background:var(--card2);}
+.branch-card.selected{border-top-color:var(--gold);background:rgba(201,168,76,.04);}
+.branch-num{font-family:'Syne',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;opacity:.6;}
+.branch-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800;color:var(--white);margin-bottom:.4rem;}
+.branch-size{font-size:.72rem;color:var(--text-dim);margin-bottom:.8rem;}
+.branch-roles{list-style:none;display:flex;flex-direction:column;gap:.3rem;}
+.branch-roles li{font-size:.72rem;color:var(--text-dim);display:flex;align-items:flex-start;gap:5px;line-height:1.4;}
+.branch-roles li::before{content:'—';color:var(--gold);opacity:.4;flex-shrink:0;font-size:.65rem;margin-top:.1em;}
+
+/* Contact section */
+#join-contact{display:none;text-align:center;margin-top:3rem;padding:3rem;
+  background:var(--card);border:1px solid var(--border);}
+.join-contact-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--white);margin-bottom:.5rem;}
+.join-contact-sub{font-size:.9rem;color:var(--text-dim);margin-bottom:2rem;line-height:1.7;}
+.join-contact-selected{font-size:.78rem;color:var(--gold);margin-bottom:1rem;font-weight:600;letter-spacing:.05em;}
+.contact-methods{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+.contact-btn{font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  padding:13px 28px;text-decoration:none;transition:all .3s;
+  clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);}
+.contact-btn-ig{background:transparent;border:1px solid rgba(167,139,250,.4);color:var(--violet);}
+.contact-btn-ig:hover{background:rgba(167,139,250,.1);box-shadow:0 0 24px rgba(167,139,250,.2);}
+.contact-btn-gh{background:transparent;border:1px solid rgba(255,255,255,.2);color:var(--text);}
+.contact-btn-gh:hover{background:rgba(255,255,255,.05);color:var(--white);}
+.contact-btn-mail{background:transparent;border:1px solid rgba(0,212,255,.35);color:var(--cyan);}
+.contact-btn-mail:hover{background:rgba(0,212,255,.08);box-shadow:0 0 24px rgba(0,212,255,.2);}
+
+/* ── CTA ── */
+#cta{padding:140px 5vw;text-align:center;position:relative;overflow:hidden;}
+#cta::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 70% at 30% 50%,rgba(0,212,255,.04),transparent),
+  radial-gradient(ellipse 50% 60% at 70% 50%,rgba(167,139,250,.04),transparent);}
+.cta-bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Syne',sans-serif;font-size:clamp(5rem,18vw,14rem);font-weight:800;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.03);white-space:nowrap;
+  pointer-events:none;letter-spacing:-.02em;}
+.cta-inner{position:relative;z-index:2;}
+.cta-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:800;
+  color:var(--white);line-height:1.1;margin-bottom:1.2rem;}
+.cta-sub{font-size:1rem;color:var(--text-dim);margin-bottom:2.5rem;max-width:480px;
+  margin-left:auto;margin-right:auto;line-height:1.8;}
+.cta-form{display:flex;max-width:440px;margin:0 auto 2.5rem;}
+.cta-input{flex:1;padding:13px 18px;background:var(--card);border:1px solid var(--border);
+  border-right:none;color:var(--white);font-family:'Outfit',sans-serif;font-size:.9rem;
+  outline:none;transition:border-color .3s;}
+.cta-input:focus{border-color:rgba(255,255,255,.2);}
+.cta-input::placeholder{color:var(--text-dim);}
+.cta-submit{padding:13px 24px;background:var(--white);color:var(--bg);border:none;
+  font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;transition:background .3s;cursor:pointer;}
+.cta-submit:hover{background:#d0d0e0;}
+.cta-links{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;}
+.cta-link{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-dim);text-decoration:none;border-bottom:1px solid transparent;
+  transition:color .3s,border-color .3s;}
+.cta-link:hover{color:var(--white);border-bottom-color:rgba(255,255,255,.3);}
+
+/* ── FOOTER ── */
+footer{padding:48px 5vw 32px;border-top:1px solid var(--border);
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;align-items:start;}
+.foot-brand-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;
+  color:var(--white);letter-spacing:.1em;margin-bottom:.4rem;}
+.foot-brand-desc{font-size:.83rem;color:var(--text-dim);line-height:1.7;max-width:260px;}
+.foot-col-title{font-size:.65rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:1rem;}
+.foot-links{display:flex;flex-direction:column;gap:.6rem;}
+.foot-links a{font-size:.85rem;color:var(--text-dim);text-decoration:none;transition:color .3s;}
+.foot-links a:hover{color:var(--white);}
+.foot-bottom{grid-column:1/-1;border-top:1px solid var(--border2);padding-top:24px;margin-top:8px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.foot-copy{font-size:.7rem;letter-spacing:.12em;color:var(--text-dim);}
+.foot-socials{display:flex;gap:1.2rem;}
+.foot-socials a{font-size:.7rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-dim);text-decoration:none;transition:color .3s;}
+.foot-socials a:hover{color:var(--white);}
+
+/* ── 3D TILT ── */
+.tilt-card{transition:transform .3s ease,box-shadow .3s ease;transform-style:preserve-3d;}
+
+/* ── ANIMATIONS ── */
+@keyframes floatUp{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:.8;}90%{opacity:.2;}100%{transform:translateY(-100vh) translateX(var(--dx));opacity:0;}}
+@keyframes glow3d{0%,100%{box-shadow:0 0 20px rgba(201,168,76,.1);}50%{box-shadow:0 0 40px rgba(201,168,76,.25);}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .overview-grid{grid-template-columns:repeat(2,1fr);}
+  .join-proj-grid{grid-template-columns:repeat(2,1fr);}
+  .branch-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:900px){
+  .xf-inner,.ai-inner,.ec-inner,.wz-inner{grid-template-columns:1fr;}
+  .phone-wrap{margin:0 auto;transform:none!important;}
+  .stat-float{display:none;}
+  .browser-wrap{max-width:100%;}
+  footer{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}
+}
+@media(max-width:600px){
+  .overview-grid,.join-proj-grid,.branch-grid{grid-template-columns:1fr;}
+  .wz-features{grid-template-columns:1fr;}
+  footer{grid-template-columns:1fr;}
+  .cta-form{flex-direction:column;}
+  .cta-input{border-right:1px solid var(--border);border-bottom:none;}
+  .ec-cta-row{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-brand"><div class="brand-mark"></div>AXIOM</a>
+  <ul class="nav-links">
+    <li><a href="#xframe">Xframe</a></li>
+    <li><a href="#airobots">Neura AI</a></li>
+    <li><a href="#eclipse">Eclipse</a></li>
+    <li><a href="#worldzero">World Zero</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">
+    Join the Build
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-bg">
+    <div class="mesh"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-diagonal"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag"><span class="tag-dot"></span>Mumbai · India — Est. 2025</div>
+    <h1 class="hero-title">
+      We Build<br/>
+      <span class="t-cyan">Technology.</span><br/>
+      <span class="t-violet t-dim">Intelligence.</span><br/>
+      <span class="t-gold">Worlds.</span>
+    </h1>
+    <p class="hero-sub">Axiom is an independent studio at the intersection of gaming technology, artificial intelligence, and interactive storytelling. Four projects. One mission.</p>
+    <div class="hero-pills">
+      <span class="pill pill-cyan" onclick="document.getElementById('xframe').scrollIntoView({behavior:'smooth'})">Xframe — Frame Gen</span>
+      <span class="pill pill-violet" onclick="document.getElementById('airobots').scrollIntoView({behavior:'smooth'})">Neura AI</span>
+      <span class="pill pill-emerald" onclick="document.getElementById('eclipse').scrollIntoView({behavior:'smooth'})">Eclipse — Browser</span>
+      <span class="pill pill-gold" onclick="document.getElementById('worldzero').scrollIntoView({behavior:'smooth'})">World Zero — Game</span>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-bar"></div><span>Explore</span></div>
+</section>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="overview-grid">
+    <div class="ov-card cyan-card tilt-card reveal" data-hover="c" onclick="document.getElementById('xframe').scrollIntoView({behavior:'smooth'})">
+      <div class="ov-accent ov-accent-cyan"></div>
+      <div class="ov-num">01 — Technology</div>
+      <div class="ov-name">Xframe</div>
+      <div class="ov-desc">AI frame generation for Android. Mid-range phones, flagship performance.</div>
+      <div class="ov-tag ov-tag-cyan">In Development</div>
+      <div class="ov-arrow">↗</div>
+    </div>
+    <div class="ov-card violet-card tilt-card reveal" style="transition-delay:.1s" data-hover="v" onclick="document.getElementById('airobots').scrollIntoView({behavior:'smooth'})">
+      <div class="ov-accent ov-accent-violet"></div>
+      <div class="ov-num">02 — Intelligence</div>
+      <div class="ov-name">Neura AI</div>
+      <div class="ov-desc">India's own AI platform. Fully India-built, currently in building stage.</div>
+      <div class="ov-tag ov-tag-violet">Building Stage</div>
+      <div class="ov-arrow">↗</div>
+    </div>
+    <div class="ov-card emerald-card tilt-card reveal" style="transition-delay:.2s" data-hover="e" onclick="document.getElementById('eclipse').scrollIntoView({behavior:'smooth'})">
+      <div class="ov-accent ov-accent-emerald"></div>
+      <div class="ov-num">03 — Browser</div>
+      <div class="ov-name">Eclipse</div>
+      <div class="ov-desc">A next-generation browser built in India. Reimagining how the web works.</div>
+      <div class="ov-tag ov-tag-emerald">Building Stage</div>
+      <div class="ov-arrow">↗</div>
+    </div>
+    <div class="ov-card gold-card tilt-card reveal" style="transition-delay:.3s" data-hover="g" onclick="document.getElementById('worldzero').scrollIntoView({behavior:'smooth'})">
+      <div class="ov-accent ov-accent-gold"></div>
+      <div class="ov-num">04 — World</div>
+      <div class="ov-name">World Zero</div>
+      <div class="ov-desc">Open world RPG on the real map of Earth. India, Act I. Launching first.</div>
+      <div class="ov-tag ov-tag-gold">Pre-Production</div>
+      <div class="ov-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<div style="margin-top:120px;" class="divider"></div>
+
+<!-- XFRAME -->
+<section id="xframe">
+  <div class="xf-inner">
+    <div class="reveal-l">
+      <div class="sec-label xf-label">01 — Technology</div>
+      <h2 class="sec-title">Console Performance.<br/>Mobile Price.</h2>
+      <p class="sec-body">Xframe brings AI-powered frame generation to Android. Mid-range phones locked at 30fps now render at a fluid 60–120fps — without the hardware upgrade. The game renders fewer frames. Xframe fills the rest.</p>
+      <div class="xf-features">
+        <div class="xf-feat">
+          <div class="xf-feat-icon">⚡</div>
+          <div>
+            <div class="xf-feat-title">Frame Interpolation</div>
+            <div class="xf-feat-desc">AI generates intermediate frames in real-time, doubling or quadrupling perceived FPS with minimal latency.</div>
+          </div>
+        </div>
+        <div class="xf-feat">
+          <div class="xf-feat-icon">📱</div>
+          <div>
+            <div class="xf-feat-title">Mid-Range Optimised</div>
+            <div class="xf-feat-desc">Built specifically for Snapdragon 6-series and Dimensity 7000-series chips. No flagship required.</div>
+          </div>
+        </div>
+        <div class="xf-feat">
+          <div class="xf-feat-icon">🎮</div>
+          <div>
+            <div class="xf-feat-title">Universal SDK</div>
+            <div class="xf-feat-desc">Drops into any game engine. Integration under a day. Works with Unity, Unreal, and custom engines.</div>
+          </div>
+        </div>
+        <div class="xf-feat">
+          <div class="xf-feat-icon">🔋</div>
+          <div>
+            <div class="xf-feat-title">Battery Efficient</div>
+            <div class="xf-feat-desc">Rendering fewer native frames means the GPU runs cooler. Xframe reduces battery drain vs native high FPS.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="xf-visual reveal-r">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-game-ui">
+              <div class="fps-row">
+                <div>
+                  <div class="fps-counter" id="fps-counter">120</div>
+                  <div class="fps-label">FPS — Xframe Active</div>
+                </div>
+                <div class="fps-badge">XFRAME ON</div>
+              </div>
+              <div class="game-scene">
+                <canvas class="scene-stars" id="scene-stars"></canvas>
+                <div class="scene-horizon"></div>
+                <div class="scene-ground"></div>
+                <div class="scene-char"></div>
+                <div class="scene-effect"></div>
+              </div>
+              <div class="perf-bars">
+                <div class="perf-row">
+                  <span class="perf-name">GPU</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="--w:42%"></div></div>
+                  <span class="perf-val">42%</span>
+                </div>
+                <div class="perf-row">
+                  <span class="perf-name">CPU</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="--w:36%"></div></div>
+                  <span class="perf-val">36%</span>
+                </div>
+                <div class="perf-row">
+                  <span class="perf-name">XFRAME</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="--w:88%"></div></div>
+                  <span class="perf-val">88%</span>
+                </div>
+                <div class="perf-row">
+                  <span class="perf-name">TEMP</span>
+                  <div class="perf-bar-bg"><div class="perf-bar-fill" style="--w:24%"></div></div>
+                  <span class="perf-val">24°</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-glow"></div>
+        <div class="stat-float left">
+          <div class="stat-float-num">4×</div>
+          <div class="stat-float-lbl">Frame Boost</div>
+        </div>
+        <div class="stat-float right">
+          <div class="stat-float-num">−32%</div>
+          <div class="stat-float-lbl">Battery Use</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- NEURA AI -->
+<section id="airobots">
+  <div class="ai-inner">
+    <div class="ai-visual reveal-l">
+      <svg class="neural-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <radialGradient id="ng" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.1"/>
+          <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+        </radialGradient>
+        <rect width="400" height="400" fill="url(#ng)"/>
+        <line x1="60" y1="80" x2="160" y2="120" stroke="#a78bfa" stroke-width="0.6" opacity="0.35"/>
+        <line x1="60" y1="160" x2="160" y2="120" stroke="#a78bfa" stroke-width="0.6" opacity="0.35"/>
+        <line x1="60" y1="240" x2="160" y2="200" stroke="#a78bfa" stroke-width="0.6" opacity="0.3"/>
+        <line x1="60" y1="320" x2="160" y2="280" stroke="#a78bfa" stroke-width="0.6" opacity="0.3"/>
+        <line x1="60" y1="160" x2="160" y2="200" stroke="#a78bfa" stroke-width="0.6" opacity="0.25"/>
+        <line x1="60" y1="240" x2="160" y2="280" stroke="#a78bfa" stroke-width="0.6" opacity="0.2"/>
+        <line x1="160" y1="120" x2="240" y2="100" stroke="#a78bfa" stroke-width="0.8" opacity="0.45"/>
+        <line x1="160" y1="120" x2="240" y2="200" stroke="#a78bfa" stroke-width="0.8" opacity="0.45"/>
+        <line x1="160" y1="200" x2="240" y2="100" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>
+        <line x1="160" y1="200" x2="240" y2="200" stroke="#a78bfa" stroke-width="0.8" opacity="0.5"/>
+        <line x1="160" y1="200" x2="240" y2="300" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>
+        <line x1="160" y1="280" x2="240" y2="200" stroke="#a78bfa" stroke-width="0.8" opacity="0.3"/>
+        <line x1="160" y1="280" x2="240" y2="300" stroke="#a78bfa" stroke-width="0.8" opacity="0.45"/>
+        <line x1="240" y1="100" x2="340" y2="200" stroke="#a78bfa" stroke-width="1" opacity="0.55"/>
+        <line x1="240" y1="200" x2="340" y2="200" stroke="#a78bfa" stroke-width="1" opacity="0.65"/>
+        <line x1="240" y1="300" x2="340" y2="200" stroke="#a78bfa" stroke-width="1" opacity="0.55"/>
+        <circle cx="60" cy="80" r="8" fill="#a78bfa" opacity="0.3" stroke="#a78bfa" stroke-width="1"/>
+        <circle cx="60" cy="160" r="8" fill="#a78bfa" opacity="0.3" stroke="#a78bfa" stroke-width="1"/>
+        <circle cx="60" cy="240" r="8" fill="#a78bfa" opacity="0.3" stroke="#a78bfa" stroke-width="1"/>
+        <circle cx="60" cy="320" r="8" fill="#a78bfa" opacity="0.3" stroke="#a78bfa" stroke-width="1"/>
+        <circle cx="160" cy="120" r="10" fill="#a78bfa" opacity="0.5" stroke="#a78bfa" stroke-width="1.5"/>
+        <circle cx="160" cy="200" r="10" fill="#a78bfa" opacity="0.6" stroke="#a78bfa" stroke-width="1.5"/>
+        <circle cx="160" cy="280" r="10" fill="#a78bfa" opacity="0.5" stroke="#a78bfa" stroke-width="1.5"/>
+        <circle cx="240" cy="100" r="10" fill="#a78bfa" opacity="0.5" stroke="#a78bfa" stroke-width="1.5"/>
+        <circle cx="240" cy="200" r="12" fill="#a78bfa" opacity="0.7" stroke="#a78bfa" stroke-width="1.5"/>
+        <circle cx="240" cy="300" r="10" fill="#a78bfa" opacity="0.5" stroke="#a78bfa" stroke-width="1.5"/>
+        <circle cx="340" cy="200" r="18" fill="rgba(167,139,250,0.12)" stroke="#a78bfa" stroke-width="2"/>
+        <circle cx="340" cy="200" r="9" fill="#a78bfa" opacity="0.85"/>
+        <circle cx="340" cy="200" r="26" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.3" stroke-dasharray="3 4">
+          <animateTransform attributeName="transform" type="rotate" values="0 340 200;360 340 200" dur="8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="240" cy="200" r="20" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0">
+          <animate attributeName="r" values="12;30;12" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Neura text -->
+        <text x="200" y="385" text-anchor="middle" fill="rgba(167,139,250,0.25)" font-family="serif" font-size="11" letter-spacing="6">NEURA AI</text>
+      </svg>
+    </div>
+    <div class="reveal-r">
+      <div class="sec-label ai-label">02 — Intelligence</div>
+      <h2 class="sec-title">Neura AI —<br/>Built in India.</h2>
+      <div class="ai-badge"><span class="ai-badge-dot"></span>India-First AI Platform — Building Stage</div>
+      <p class="sec-body">Neura AI is Axiom's own intelligence platform — fully designed and built in India. Currently in the building stage, Neura is being developed to become India's own AI — not just a product, but a foundation.</p>
+      <div class="ai-cards">
+        <div class="ai-card">
+          <div class="ai-card-head">
+            <span class="ai-card-name">Neura Core</span>
+            <span class="ai-card-status status-build">Building</span>
+          </div>
+          <div class="ai-card-desc">The central intelligence layer powering Neura AI. Language understanding, reasoning, and response generation — built from the ground up in India.</div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-head">
+            <span class="ai-card-name">Perception Engine</span>
+            <span class="ai-card-status status-dev">Active R&amp;D</span>
+          </div>
+          <div class="ai-card-desc">Real-time scene understanding and object recognition for low-power embedded systems. Optimised for edge deployment.</div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-head">
+            <span class="ai-card-name">Neura Assistant</span>
+            <span class="ai-card-status status-build">Building</span>
+          </div>
+          <div class="ai-card-desc">An AI assistant that understands India — languages, context, culture. Built natively for Indian users and use cases.</div>
+        </div>
+        <div class="ai-card">
+          <div class="ai-card-head">
+            <span class="ai-card-name">Synthetic Data Lab</span>
+            <span class="ai-card-status status-research">Research</span>
+          </div>
+          <div class="ai-card-desc">Generating high-fidelity training data using game engine environments — bridging virtual simulation and physical world accuracy.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ECLIPSE BROWSER -->
+<section id="eclipse">
+  <div class="ec-inner">
+    <div class="reveal-l">
+      <div class="sec-label ec-label">03 — Browser</div>
+      <h2 class="sec-title">Eclipse.<br/>Reimagine the Web.</h2>
+      <p class="sec-body">Eclipse is a next-generation browser built entirely in India. Currently in active building stage — focused on speed, privacy, and a reimagined web experience designed for the next billion users.</p>
+      <div class="ec-feats">
+        <div class="ec-feat">
+          <div class="ec-feat-icon">🌐</div>
+          <div>
+            <div class="ec-feat-title">India-First Design</div>
+            <div class="ec-feat-desc">Built with Indian users in mind — optimised for Indian languages, networks, and workflows from day one.</div>
+          </div>
+        </div>
+        <div class="ec-feat">
+          <div class="ec-feat-icon">🔒</div>
+          <div>
+            <div class="ec-feat-title">Privacy by Default</div>
+            <div class="ec-feat-desc">No tracking, no data selling. Eclipse puts user privacy first — built into the core, not bolted on.</div>
+          </div>
+        </div>
+        <div class="ec-feat">
+          <div class="ec-feat-icon">⚡</div>
+          <div>
+            <div class="ec-feat-title">Blazing Performance</div>
+            <div class="ec-feat-desc">Engineered for speed on mid-range hardware. Smooth, responsive browsing even on budget devices.</div>
+          </div>
+        </div>
+      </div>
+      <div class="ec-cta-row">
+        <a href="https://tn-ares0818.github.io/Eclipse/?utm_source=axiom&utm_medium=web" target="_blank" rel="noopener" class="ec-btn">
+          Check Out Eclipse ↗
+        </a>
+        <span class="ec-note">Currently in building stage</span>
+      </div>
+    </div>
+    <div class="ec-visual reveal-r">
+      <div class="browser-wrap">
+        <div class="browser-frame">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <div class="b-dot b-dot-r"></div>
+              <div class="b-dot b-dot-y"></div>
+              <div class="b-dot b-dot-g"></div>
+            </div>
+            <div class="browser-url">eclipse://home</div>
+          </div>
+          <div class="browser-body">
+            <div class="browser-content">
+              <div class="bc-sub">Eclipse Browser — Building Stage</div>
+              <div class="bc-title">The Web,<br/>Reimagined.</div>
+              <div class="bc-tags">
+                <div class="bc-tag">Privacy</div>
+                <div class="bc-tag">Speed</div>
+                <div class="bc-tag">India-Built</div>
+                <div class="bc-tag">Open</div>
+              </div>
+              <div class="bc-bar-lbl"><span>Rendering Engine</span><span>62%</span></div>
+              <div class="bc-bar"><div class="bc-bar-fill" style="width:62%;animation:barFill 2s ease forwards;"></div></div>
+              <div class="bc-bar-lbl"><span>Privacy Layer</span><span>78%</span></div>
+              <div class="bc-bar"><div class="bc-bar-fill" style="width:78%;animation:barFill 2.2s ease forwards;"></div></div>
+              <div class="bc-bar-lbl"><span>UI / Interface</span><span>45%</span></div>
+              <div class="bc-bar"><div class="bc-bar-fill" style="width:45%;animation:barFill 2.4s ease forwards;"></div></div>
+            </div>
+            <div class="browser-glow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WORLD ZERO -->
+<section id="worldzero">
+  <div class="wz-inner">
+    <div class="reveal-l">
+      <div class="sec-label wz-label">04 — World</div>
+      <h2 class="sec-title" style="font-family:'Syne',sans-serif;">World Zero</h2>
+      <p class="sec-body">An open world action RPG built on the real map of Earth. Layer Zero — the resonance network beneath the surface — has been hidden for 3,000 years. One person just found the signal.</p>
+      <p class="sec-body" style="margin-top:1rem;">India, Act I. Launching first. The world expands with every update, indefinitely.</p>
+      <div class="wz-features">
+        <div class="wz-feat">
+          <div class="wz-feat-icon">🗺️</div>
+          <div class="wz-feat-name">Real Earth Map</div>
+          <div class="wz-feat-desc">Geographically accurate, stylized. India to Japan to Africa — one expanding world.</div>
+        </div>
+        <div class="wz-feat">
+          <div class="wz-feat-icon">⚡</div>
+          <div class="wz-feat-name">Resonance Combat</div>
+          <div class="wz-feat-desc">Supernatural frequency-based powers. Flashy, precise, cinematic.</div>
+        </div>
+        <div class="wz-feat">
+          <div class="wz-feat-icon">🎬</div>
+          <div class="wz-feat-name">Cinematic Story</div>
+          <div class="wz-feat-desc">Prestige TV-level cutscenes. Real-time rendered. Story-first design.</div>
+        </div>
+        <div class="wz-feat">
+          <div class="wz-feat-icon">🔄</div>
+          <div class="wz-feat-name">Live Service</div>
+          <div class="wz-feat-desc">New regions, characters, and story chapters every 6 weeks. No ending planned.</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal-r">
+      <div class="wz-map">
+        <canvas id="india-canvas"></canvas>
+        <div class="map-label">ACT I — INDIA</div>
+        <div class="map-locked" style="top:22%;left:58%">LOCKED</div>
+        <div class="map-locked" style="top:68%;left:72%">LOCKED</div>
+        <div class="wz-corner tl"></div>
+        <div class="wz-corner tr"></div>
+        <div class="wz-corner bl"></div>
+        <div class="wz-corner br"></div>
+      </div>
+      <div style="margin-top:2rem;">
+        <button class="nav-btn" style="padding:12px 28px;font-size:.78rem;" onclick="document.getElementById('join').scrollIntoView({behavior:'smooth'})">
+          Join the World Zero Team ↗
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RECRUITMENT -->
+<section id="join">
+  <div class="join-header reveal">
+    <div class="sec-label" style="color:var(--text-dim);text-align:center;font-size:.65rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;margin-bottom:.8rem;">Get Involved</div>
+    <h2 class="join-title">Join the Build.</h2>
+    <p class="join-sub">We're building everything from scratch. Every branch, every line of code, every frame. Pick your project — your role matters.</p>
+  </div>
+
+  <!-- Step 1: Choose project -->
+  <div id="join-step1">
+    <div class="join-step-label">Step 01 — Choose your project</div>
+    <div class="join-proj-grid">
+      <div class="join-proj-card c-cyan tilt-card" data-project="xframe" onclick="selectProject(this)">
+        <div class="join-proj-check">✓</div>
+        <div class="join-proj-icon">⚡</div>
+        <div class="join-proj-name">Xframe</div>
+        <div class="join-proj-desc">Mobile AI frame generation technology. Engineering roles in AI, SDK, and Android systems.</div>
+      </div>
+      <div class="join-proj-card c-violet tilt-card" data-project="neura" onclick="selectProject(this)">
+        <div class="join-proj-check">✓</div>
+        <div class="join-proj-icon">🧠</div>
+        <div class="join-proj-name">Neura AI</div>
+        <div class="join-proj-desc">India's own AI platform. Roles in ML research, data engineering, and AI product development.</div>
+      </div>
+      <div class="join-proj-card c-emerald tilt-card" data-project="eclipse" onclick="selectProject(this)">
+        <div class="join-proj-check">✓</div>
+        <div class="join-proj-icon">🌐</div>
+        <div class="join-proj-name">Eclipse Browser</div>
+        <div class="join-proj-desc">Next-generation India-built browser. Roles in browser engine, UI, privacy systems, and QA.</div>
+      </div>
+      <div class="join-proj-card c-gold tilt-card" data-project="worldzero" onclick="selectProject(this)">
+        <div class="join-proj-check">✓</div>
+        <div class="join-proj-icon">🎮</div>
+        <div class="join-proj-name">World Zero</div>
+        <div class="join-proj-desc">Open world RPG — India Act I. Eight branches to choose from. 1,500-person vision team.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: World Zero branches -->
+  <div id="join-branches">
+    <div class="branch-header reveal">
+      <div class="join-step-label">Step 02 — Choose your World Zero branch</div>
+    </div>
+    <div class="branch-grid">
+      <div class="branch-card" onclick="selectBranch(this,'Engine &amp; Programming')">
+        <div class="branch-num">Branch 01 — ~280 people</div>
+        <div class="branch-name">Engine &amp; Programming</div>
+        <div class="branch-size">Core UE5 systems, combat, network, AI</div>
+        <ul class="branch-roles">
+          <li>Core Engine (UE5)</li>
+          <li>Gameplay / Combat Systems</li>
+          <li>World Streaming &amp; Map Tech</li>
+          <li>AI &amp; Enemy Behavior</li>
+          <li>Network &amp; Server Infra</li>
+          <li>UI/UX Engineering</li>
+          <li>Tools &amp; Pipeline</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'Art')">
+        <div class="branch-num">Branch 02 — ~380 people</div>
+        <div class="branch-name">Art</div>
+        <div class="branch-size">Largest branch — visuals, characters, worlds</div>
+        <ul class="branch-roles">
+          <li>Concept Art</li>
+          <li>Character Art (modeling + rigging)</li>
+          <li>Environment Art</li>
+          <li>Technical Art (shaders)</li>
+          <li>VFX (Niagara)</li>
+          <li>Lighting</li>
+          <li>UI Art</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'Animation')">
+        <div class="branch-num">Branch 03 — ~160 people</div>
+        <div class="branch-name">Animation</div>
+        <div class="branch-size">Combat, cutscene, mocap, facial</div>
+        <ul class="branch-roles">
+          <li>Character Combat Animation</li>
+          <li>Cutscene Animation</li>
+          <li>Motion Capture Studio</li>
+          <li>Facial Animation</li>
+          <li>Technical Animation (rigging, IK)</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'World &amp; Level Design')">
+        <div class="branch-num">Branch 04 — ~150 people</div>
+        <div class="branch-name">World &amp; Level Design</div>
+        <div class="branch-size">Procedural worlds, cities, dungeons</div>
+        <ul class="branch-roles">
+          <li>Procedural World Generation</li>
+          <li>City / Environment Level Design</li>
+          <li>Dungeon / Interior Design</li>
+          <li>Exploration &amp; Traversal Design</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'Narrative &amp; Game Design')">
+        <div class="branch-num">Branch 05 — ~130 people</div>
+        <div class="branch-name">Narrative &amp; Game Design</div>
+        <div class="branch-size">Story, quests, systems, balance</div>
+        <ul class="branch-roles">
+          <li>Story / Writing Team</li>
+          <li>Quest Design</li>
+          <li>Combat &amp; Systems Design (balance)</li>
+          <li>Cultural Research &amp; Authenticity</li>
+          <li>UX / Player Experience Design</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'Audio')">
+        <div class="branch-num">Branch 06 — ~70 people</div>
+        <div class="branch-name">Audio</div>
+        <div class="branch-size">Music, SFX, voice, Wwise</div>
+        <ul class="branch-roles">
+          <li>Music Composition &amp; Scoring</li>
+          <li>Sound Design (SFX)</li>
+          <li>Voice Direction &amp; Casting</li>
+          <li>Audio Engineering (Wwise)</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'Cinematics')">
+        <div class="branch-num">Branch 07 — ~80 people</div>
+        <div class="branch-name">Cinematics</div>
+        <div class="branch-size">Direction, previs, sequencer, color</div>
+        <ul class="branch-roles">
+          <li>Cinematic Direction</li>
+          <li>Storyboard &amp; Previs</li>
+          <li>Sequencer / Camera Work</li>
+          <li>Cinematic Lighting &amp; VFX</li>
+          <li>Post Process &amp; Color Grading</li>
+        </ul>
+      </div>
+      <div class="branch-card" onclick="selectBranch(this,'Production &amp; Operations')">
+        <div class="branch-num">Branch 08 — ~130 people</div>
+        <div class="branch-name">Production &amp; Operations</div>
+        <div class="branch-size">Directors, producers, QA, DevOps</div>
+        <ul class="branch-roles">
+          <li>Executive &amp; Creative Directors</li>
+          <li>Producers</li>
+          <li>Project Managers</li>
+          <li>QA &amp; Playtesting</li>
+          <li>IT / DevOps / Build Systems</li>
+          <li>HR / Admin / Legal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div id="join-contact">
+    <div class="join-contact-title">Ready to Apply?</div>
+    <div id="join-selected-label" class="join-contact-selected"></div>
+    <div class="join-contact-sub">Send a message with your role, skills, and a bit about yourself. DM on Instagram, raise an issue on GitHub, or send an email. We read everything.</div>
+    <div class="contact-methods">
+      <a href="https://www.instagram.com/rxn.7z" target="_blank" rel="noopener" class="contact-btn contact-btn-ig">
+        Instagram DM ↗
+      </a>
+      <a href="https://github.com/TN-ARES0818" target="_blank" rel="noopener" class="contact-btn contact-btn-gh">
+        GitHub ↗
+      </a>
+      <a href="mailto:ukadisunita@gmail.com" class="contact-btn contact-btn-mail">
+        Email ↗
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-bg-text">AXIOM</div>
+  <div class="cta-inner reveal">
+    <div class="sec-label" style="color:var(--text-dim);text-align:center;font-size:.65rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;margin-bottom:.8rem;">Stay Connected</div>
+    <h2 class="cta-title">Follow the Build.<br/>Join the World.</h2>
+    <p class="cta-sub">Get updates on Xframe, Neura AI, Eclipse, and World Zero — and everything Axiom is building next.</p>
+    <div class="cta-form">
+      <input class="cta-input" type="email" placeholder="your@email.com"/>
+      <button class="cta-submit">Subscribe</button>
+    </div>
+    <div class="cta-links">
+      <a href="https://www.instagram.com/rxn.7z" target="_blank" rel="noopener" class="cta-link">Instagram</a>
+      <a href="https://github.com/TN-ARES0818" target="_blank" rel="noopener" class="cta-link">GitHub</a>
+      <a href="mailto:ukadisunita@gmail.com" class="cta-link">Email</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="foot-brand-name">AXIOM</div>
+    <div class="foot-brand-desc">Independent studio building technology, intelligence, browsers, and interactive worlds from Mumbai, India.</div>
+  </div>
+  <div>
+    <div class="foot-col-title">Projects</div>
+    <div class="foot-links">
+      <a href="#xframe">Xframe</a>
+      <a href="#airobots">Neura AI</a>
+      <a href="#eclipse">Eclipse Browser</a>
+      <a href="#worldzero">World Zero</a>
+    </div>
+  </div>
+  <div>
+    <div class="foot-col-title">Studio</div>
+    <div class="foot-links">
+      <a href="#join">Join the Build</a>
+      <a href="https://www.instagram.com/rxn.7z" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://github.com/TN-ARES0818" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:ukadisunita@gmail.com">Contact</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span class="foot-copy">© 2025 Axiom Studio. All rights reserved.</span>
+    <div class="foot-socials">
+      <a href="https://www.instagram.com/rxn.7z" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://github.com/TN-ARES0818" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:ukadisunita@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── TOUCH CHECK — no cursor on touch devices ── */
+const isTouch = window.matchMedia('(hover:none) and (pointer:coarse)').matches;
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-r');
+
+if (!isTouch) {
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function loop(){
+    rx+=(mx-rx)*.16; ry+=(my-ry)*.16;
+    cur.style.left=mx+'px'; cur.style.top=my+'px';
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('[data-hover]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{document.body.className='h'+el.dataset.hover;});
+    el.addEventListener('mouseleave',()=>{document.body.className='';});
+  });
+  document.querySelectorAll('a,button,.xf-feat,.ai-card,.wz-feat,.pill,.ov-card,.join-proj-card,.branch-card,.ec-feat').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='14px';cur.style.height='14px';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';});
+  });
+}
+
+/* ── SCROLL PROGRESS ── */
+const prog = document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  const pct = scrollY/(document.body.scrollHeight-innerHeight)*100;
+  prog.style.width=pct+'%';
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>50);
+});
+
+/* ── REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
+
+/* ── 3D TILT ── */
+if(!isTouch){
+  document.querySelectorAll('.tilt-card').forEach(card=>{
+    card.style.transition='transform .3s ease';
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const x=(e.clientX-r.left)/r.width-.5;
+      const y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform=`perspective(800px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateZ(8px)`;
+    });
+    card.addEventListener('mouseleave',()=>{ card.style.transform=''; });
+  });
+}
+
+/* ── PARTICLES (hero) ── */
+(function(){
+  const canvas=document.getElementById('particle-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  for(let i=0;i<80;i++){
+    particles.push({
+      x:Math.random()*1000,y:Math.random()*1000,
+      vx:(Math.random()-.5)*.3,vy:-(Math.random()*.4+.1),
+      r:Math.random()*1.5+.3,
+      o:Math.random()*.5+.1,
+      hue:Math.random()>0.7?180:Math.random()>0.5?260:50
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x/1000*W,p.y/1000*H,p.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},80%,70%,${p.o})`;
+      ctx.fill();
+      p.y-=.05;
+      p.x+=p.vx;
+      if(p.y<-0.05){p.y=1.05;p.x=Math.random();}
+      if(p.x<0)p.x=1; if(p.x>1)p.x=0;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── SCENE STARS (phone) ── */
+(function(){
+  const c=document.getElementById('scene-stars');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth||208,H=c.height=c.offsetHeight||155;
+  const stars=Array.from({length:40},()=>({x:Math.random()*W,y:Math.random()*H*.6,r:Math.random()*.8+.2,o:Math.random()*.6+.2}));
+  ctx.clearRect(0,0,W,H);
+  stars.forEach(s=>{
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(0,212,255,${s.o})`;ctx.fill();
+  });
+})();
+
+/* ── FPS COUNTER ANIMATION ── */
+(function(){
+  const el=document.getElementById('fps-counter');
+  if(!el)return;
+  let v=29,target=120;
+  const xo=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){
+      const t=setInterval(()=>{
+        v+=Math.ceil((target-v)/8);
+        el.textContent=v;
+        if(v>=target){el.textContent=target;clearInterval(t);}
+      },24);
+      xo.unobserve(entries[0].target);
+    }
+  },{threshold:.5});
+  xo.observe(el);
+})();
+
+/* ── INDIA CANVAS MAP ── */
+(function(){
+  const canvas=document.getElementById('india-canvas');
+  if(!canvas)return;
+
+  // India boundary [lon, lat] — clockwise from NW corner (J&K)
+  const INDIA=[
+    [74.6,32.5],[74.3,31.0],[73.9,30.0],[73.3,28.8],[72.5,27.5],
+    [71.8,26.2],[71.0,25.0],[70.3,24.0],[69.5,23.5],
+    [69.0,22.9],[68.7,22.4],[68.9,22.1],[69.2,22.0],
+    [70.0,22.8],[71.5,22.5],[72.5,22.2],[72.4,20.5],
+    [72.6,18.5],[73.1,17.0],[73.8,15.5],[74.8,13.0],[75.5,11.5],
+    [76.2,10.8],[76.5,8.5],[77.5,8.1],
+    [79.0,9.0],[80.3,12.0],[80.1,13.3],[80.5,14.5],[80.5,16.0],
+    [82.3,18.8],[84.3,19.8],[86.0,20.4],[87.5,21.5],
+    [88.5,21.5],[88.3,22.5],
+    [88.5,23.5],[89.5,23.5],[90.5,22.5],
+    [91.5,22.5],[92.0,23.5],[93.0,25.5],[94.5,27.5],
+    [96.5,28.0],[97.3,28.0],
+    [97.3,29.5],[95.0,29.0],[93.0,29.2],
+    [92.0,28.5],[91.5,27.5],[90.5,26.8],[89.5,26.8],
+    [88.0,27.2],[87.0,27.5],[85.5,27.3],[84.0,28.5],[81.5,28.5],[80.5,29.5],
+    [79.5,30.5],[78.5,31.5],[77.5,32.0],[76.5,32.5],[76.0,33.0],[75.0,33.2],
+    [74.6,32.5]
+  ];
+  // Andaman islands (separate)
+  const ANDAMAN=[[92.5,13.7],[92.8,12.8],[93.0,11.5],[93.1,10.5],[92.7,9.5],[92.5,13.7]];
+
+  const LON0=62,LON1=100,LAT0=6,LAT1=35;
+
+  function toXY(lon,lat,W,H){
+    return [(lon-LON0)/(LON1-LON0)*W,(LAT1-lat)/(LAT1-LAT0)*H];
+  }
+
+  let phase=0;
+
+  function draw(){
+    const W=canvas.width,H=canvas.height;
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+
+    // Grid lines
+    ctx.strokeStyle='rgba(201,168,76,0.06)';
+    ctx.lineWidth=.5;
+    ctx.setLineDash([4,8]);
+    for(let lon=65;lon<=100;lon+=5){
+      const[x1,y1]=toXY(lon,LAT1,W,H);
+      const[x2,y2]=toXY(lon,LAT0,W,H);
+      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    }
+    for(let lat=10;lat<=35;lat+=5){
+      const[x1,y]=toXY(LON0,lat,W,H);
+      const[x2,]=toXY(LON1,lat,W,H);
+      ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Draw India shape
+    function drawShape(pts,fill,stroke,glow){
+      if(pts.length<2)return;
+      ctx.beginPath();
+      const[sx,sy]=toXY(pts[0][0],pts[0][1],W,H);
+      ctx.moveTo(sx,sy);
+      for(let i=1;i<pts.length;i++){
+        const[x,y]=toXY(pts[i][0],pts[i][1],W,H);
+        ctx.lineTo(x,y);
+      }
+      ctx.closePath();
+      ctx.fillStyle=fill;
+      ctx.fill();
+      if(glow>0){
+        ctx.shadowBlur=glow;
+        ctx.shadowColor='rgba(201,168,76,.8)';
+      }
+      ctx.strokeStyle=stroke;
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+      ctx.shadowBlur=0;
+    }
+
+    // Main India
+    const pulse=0.5+0.5*Math.sin(phase);
+    const fillAlpha=0.10+0.06*pulse;
+    drawShape(INDIA,`rgba(201,168,76,${fillAlpha})`,'rgba(201,168,76,0.85)',12+6*pulse);
+    // Inner bright edge
+    ctx.globalAlpha=0.4;
+    drawShape(INDIA,'transparent','rgba(255,220,100,0.5)',0);
+    ctx.globalAlpha=1;
+
+    // Andaman
+    drawShape(ANDAMAN,'rgba(201,168,76,0.08)','rgba(201,168,76,0.5)',4);
+
+    // Pulse dot — central India (~78°E, 22°N)
+    const[px,py]=toXY(78,22,W,H);
+    const pr=4+3*pulse;
+    ctx.beginPath();ctx.arc(px,py,pr,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,0.15)';ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,2.5,0,Math.PI*2);
+    ctx.fillStyle='#c9a84c';
+    ctx.shadowBlur=12+8*pulse;ctx.shadowColor='#c9a84c';
+    ctx.fill();ctx.shadowBlur=0;
+
+    // Ring around pulse dot
+    ctx.beginPath();ctx.arc(px,py,8+6*pulse,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(201,168,76,${0.5*(1-pulse*0.8)})`;
+    ctx.lineWidth=1;ctx.stroke();
+
+    // Route lines from India outward
+    const[ix,iy]=toXY(78,22,W,H);
+    const routes=[[90,30],[70,30],[80,10]];
+    routes.forEach(([rlon,rlat])=>{
+      const[rx2,ry2]=toXY(rlon,rlat,W,H);
+      ctx.beginPath();ctx.moveTo(ix,iy);ctx.lineTo(rx2,ry2);
+      ctx.strokeStyle='rgba(201,168,76,0.12)';
+      ctx.lineWidth=.8;ctx.setLineDash([3,6]);ctx.stroke();ctx.setLineDash([]);
+    });
+
+    phase+=0.02;
+    requestAnimationFrame(draw);
+  }
+
+  function resize(){
+    const rect=canvas.parentElement.getBoundingClientRect();
+    canvas.width=rect.width;
+    canvas.height=rect.height;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  draw();
+})();
+
+/* ── RECRUITMENT LOGIC ── */
+let selectedProject='';
+let selectedBranch='';
+
+function selectProject(card){
+  document.querySelectorAll('.join-proj-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedProject=card.dataset.project;
+  const branches=document.getElementById('join-branches');
+  const contact=document.getElementById('join-contact');
+  if(selectedProject==='worldzero'){
+    branches.style.display='block';
+    contact.style.display='none';
+    selectedBranch='';
+    document.querySelectorAll('.branch-card').forEach(b=>b.classList.remove('selected'));
+    branches.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    branches.style.display='none';
+    contact.style.display='block';
+    const labels={
+      xframe:'Applying for: Xframe',
+      neura:'Applying for: Neura AI',
+      eclipse:'Applying for: Eclipse Browser'
+    };
+    document.getElementById('join-selected-label').textContent=labels[selectedProject]||'';
+    contact.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function selectBranch(card,name){
+  document.querySelectorAll('.branch-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedBranch=name;
+  const contact=document.getElementById('join-contact');
+  document.getElementById('join-selected-label').textContent='World Zero — Applying for: '+name;
+  contact.style.display='block';
+  contact.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+</body>
+</html>
